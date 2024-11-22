@@ -1,0 +1,29 @@
+name: Run Assembly Code
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-run:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install MASM
+      run: |
+        choco install masm32
+        set PATH=C:\masm32\bin;%PATH%
+
+    - name: Assemble and link
+      run: |
+        ml /c /coff lab_program.asm
+        link /subsystem:console lab_program.obj
+
+    - name: Run the program
+      run: |
+        lab_program.exe
